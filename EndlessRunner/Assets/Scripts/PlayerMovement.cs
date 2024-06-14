@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerMovement : MonoBehaviour {
-
+public class PlayerMovement : MonoBehaviour
+{
     bool alive = true;
 
     public float speed = 5;
@@ -13,7 +13,13 @@ public class PlayerMovement : MonoBehaviour {
 
     public float speedIncreasePerPoint = 0.1f;
 
-    private void FixedUpdate ()
+    [SerializeField] float jumpForce = 400f;
+    [SerializeField] LayerMask groundMask;
+
+    private float lastJumpTime;
+    public float jumpCooldown = 1f; // 점프 쿨다운 시간 (초 단위)
+
+    private void FixedUpdate()
     {
         if (!alive) return;
 
@@ -22,23 +28,42 @@ public class PlayerMovement : MonoBehaviour {
         rb.MovePosition(rb.position + forwardMove + horizontalMove);
     }
 
-    private void Update () {
+    private void Update()
+    {
         horizontalInput = Input.GetAxis("Horizontal");
 
-        if (transform.position.y < -5) {
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= lastJumpTime + jumpCooldown)
+        {
+            Jump();
+        }
+
+        if (transform.position.y < -5)
+        {
             Die();
         }
-	}
+    }
 
-    public void Die ()
+    public void Die()
     {
         alive = false;
         // Restart the game
         Invoke("Restart", 2);
     }
 
-    void Restart ()
+    void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void Jump()
+    {
+        float height = GetComponent<Collider>().bounds.size.y;
+        bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.1f, groundMask);
+
+        if (isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            lastJumpTime = Time.time; // 마지막 점프 시간 업데이트
+        }
     }
 }
