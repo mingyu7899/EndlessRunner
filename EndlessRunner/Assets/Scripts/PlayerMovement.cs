@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
@@ -18,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
 
     private float lastJumpTime;
     public float jumpCooldown = 1f; // 점프 쿨다운 시간 (초 단위)
+
+    [SerializeField] private GameObject prefab;
 
     private void FixedUpdate()
     {
@@ -40,6 +43,11 @@ public class PlayerMovement : MonoBehaviour
         if (transform.position.y < -5)
         {
             Die();
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            RotatePlayerAndCamera();
         }
     }
 
@@ -64,6 +72,38 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             lastJumpTime = Time.time; // 마지막 점프 시간 업데이트
+        }
+    }
+
+    void RotatePlayerAndCamera()
+    {
+        if(CheckObjectsBelow().name == "Road_Left_Corner")
+        {   
+            Quaternion targetRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0f, -90f, 0f));
+            transform.rotation = targetRotation;
+
+            Quaternion cameraTargetRotation = Quaternion.Euler(Camera.main.transform.eulerAngles + new Vector3(0f, -90f, 0f));
+            Camera.main.transform.rotation = cameraTargetRotation;
+        }else if(CheckObjectsBelow().name == "Road_Right_Corner")
+        {
+            Quaternion targetRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0f, 90f, 0f));
+            transform.rotation = targetRotation;
+
+            Quaternion cameraTargetRotation = Quaternion.Euler(Camera.main.transform.eulerAngles + new Vector3(0f, 90f, 0f));
+            Camera.main.transform.rotation = cameraTargetRotation;
+        }
+    }
+    private GameObject CheckObjectsBelow()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit))
+        {
+            GameObject objectBelow = hit.collider.gameObject;
+            return objectBelow;
+        }
+        else
+        {
+            return null;
         }
     }
 }

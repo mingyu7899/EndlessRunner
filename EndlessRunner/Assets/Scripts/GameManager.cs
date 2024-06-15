@@ -12,24 +12,27 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField] PlayerMovement playerMovement;
 
-    public void IncrementScore ()
-    {
-        score++;
-        scoreText.text = "SCORE: " + score;
-        // Increase the player's speed
-        playerMovement.speed += playerMovement.speedIncreasePerPoint;
-    }
-
     private void Awake ()
     {
         inst = this;
     }
 
     private void Start () {
-
-	}
+    }
 
 	private void Update () {
 	
 	}
+    public void IncrementScore()
+    {
+        // To activate the PlayerMovement component if it is disabled
+        if (playerMovement != null && !playerMovement.enabled)
+        {
+            playerMovement.enabled = true;
+        }
+        score++;
+        scoreText.text = "SCORE: " + score;
+
+        playerMovement.speed += playerMovement.speedIncreasePerPoint;
+    }
 }

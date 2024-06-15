@@ -5,7 +5,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638539295563056528
+      ticks: 638539559740000000
     m_Hash: 548756177
   m_LockFileStatus:
     m_FilePath: "C:/Users/a6649/OneDrive/\uBB38\uC11C/GitRepository/EndlessRunner/EndlessRunner/Packages/packages-lock.json"
@@ -13,7 +13,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638539295998196842
+      ticks: 638539559740000000
     m_Hash: 895209317
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
